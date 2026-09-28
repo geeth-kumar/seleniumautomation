@@ -31,40 +31,41 @@ public class WebTableTest extends BaseTest {
 	    Assert.assertEquals(email, "jsmith@gmail.com");
 	}
 
-    @Test
-    public void webTableFunctionality() {
 
-        driver.get("https://the-internet.herokuapp.com/tables");
+	@Test
+	public void webTableFunctionality() {
 
-        // Find all rows in the first table
-        List<WebElement> rows = driver.findElements(
-                By.xpath("//table[@id='table1']/tbody/tr")
-        );
+	    driver.get("https://the-internet.herokuapp.com/tables");
 
-        System.out.println("Total rows: " + rows.size());
+	    // Wait until the first row is displayed
+	    WebElement firstRow = new org.openqa.selenium.support.ui.WebDriverWait(
+	            driver,
+	            java.time.Duration.ofSeconds(10)
+	    ).until(
+	            org.openqa.selenium.support.ui.ExpectedConditions
+	                    .visibilityOfElementLocated(
+	                            By.xpath("//table[@id='table1']/tbody/tr[1]")
+	                    )
+	    );
 
-        // Verify rows are present
-        Assert.assertTrue(rows.size() > 0);
+	    // Get cells from first row
+	    List<WebElement> cells = firstRow.findElements(By.tagName("td"));
 
-        // Get first row
-        WebElement firstRow = rows.get(0);
+	    System.out.println("Total columns: " + cells.size());
 
-        // Get cells from first row
-        List<WebElement> cells = firstRow.findElements(
-                By.tagName("td")
-        );
+	    // Verify columns are present
+	    Assert.assertTrue(
+	            cells.size() > 0,
+	            "No columns found in the first table row"
+	    );
 
-        System.out.println("Total columns: " + cells.size());
+	    // Print first row data
+	    for (WebElement cell : cells) {
+	        System.out.println(cell.getText());
+	    }
+	}
+	
 
-        // Verify columns are present
-        Assert.assertTrue(cells.size() > 0);
-
-        // Print first row data
-        for (WebElement cell : cells) {
-            System.out.println(cell.getText());
-        }
-        
-    }
     @Test
     public void verifyUserDetails() {
 

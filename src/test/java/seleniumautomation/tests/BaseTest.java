@@ -52,6 +52,12 @@ public class BaseTest {
             prefs.put("download.directory_upgrade", true);
 
             ChromeOptions options = new ChromeOptions();
+           
+            options.setUnhandledPromptBehaviour(
+                    org.openqa.selenium.UnexpectedAlertBehaviour.DISMISS
+            );
+            
+
 
             options.setExperimentalOption("prefs", prefs);
 

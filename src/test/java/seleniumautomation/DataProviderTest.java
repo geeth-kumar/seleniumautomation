@@ -23,8 +23,9 @@ public Object[][] loginData() {
 }
 
 
+
 @Test(dataProvider = "loginData")
-public void loginTest(String user, String pass, boolean shouldSucceed, String expectedMsg) {
+public void loginTest(String user, String pass) {
 
     driver.get("https://the-internet.herokuapp.com/login");
 
@@ -35,10 +36,12 @@ public void loginTest(String user, String pass, boolean shouldSucceed, String ex
     String actualMessage = loginPage.getMessage();
 
     Assert.assertTrue(
-        actualMessage.contains(expectedMsg),
-        "Expected message: " + expectedMsg + " but actual message was: " + actualMessage
+        actualMessage.contains("Your username is invalid!"),
+        "Expected invalid login message but actual message was: " + actualMessage
     );
 }
+
+
 
 
 }

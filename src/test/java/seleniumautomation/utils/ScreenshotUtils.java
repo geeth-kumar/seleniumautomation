@@ -11,28 +11,37 @@ import org.openqa.selenium.WebDriver;
 
 public class ScreenshotUtils {
 
-    public static void takeScreenshot(WebDriver driver, String fileName)
-            throws IOException {
+	
+	public static void takeScreenshot(WebDriver driver, String fileName)
+	        throws IOException {
 
-        TakesScreenshot screenshot =
-                (TakesScreenshot) driver;
+	    // Handle unexpected alert before taking screenshot
+	    try {
+	        driver.switchTo().alert().accept();
+	        System.out.println("Unexpected alert dismissed before screenshot.");
+	    } catch (Exception e) {
+	        // No alert present
+	    }
 
-        File source =
-                screenshot.getScreenshotAs(OutputType.FILE);
+	    TakesScreenshot screenshot =
+	            (TakesScreenshot) driver;
 
-        File destination =
-                new File("screenshots/" + fileName + ".png");
+	    File source =
+	            screenshot.getScreenshotAs(OutputType.FILE);
 
-        destination.getParentFile().mkdirs();
+	    File destination =
+	            new File("screenshots/" + fileName + ".png");
 
-        Files.copy(
-                source.toPath(),
-                destination.toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-        );
+	    destination.getParentFile().mkdirs();
 
-        System.out.println(
-                "Screenshot saved: " + destination.getAbsolutePath()
-        );
-    }
+	    Files.copy(
+	            source.toPath(),
+	            destination.toPath(),
+	            StandardCopyOption.REPLACE_EXISTING
+	    );
+
+	    System.out.println(
+	            "Screenshot saved: " + destination.getAbsolutePath()
+	    );
+	}
 }

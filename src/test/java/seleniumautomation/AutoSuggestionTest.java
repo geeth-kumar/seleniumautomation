@@ -14,45 +14,57 @@ import seleniumautomation.tests.BaseTest;
 
 public class AutoSuggestionTest extends BaseTest {
 
-    @Test
-    public void autoSuggestionFunctionality() {
 
-        driver.get("https://www.google.com/");
+	
+	@Test
+	public void autoSuggestionFunctionality() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    driver.get("https://www.google.com/");
 
-        // Enter search text
-        WebElement searchBox = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.name("q")
-                )
-        );
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        searchBox.sendKeys("selenium");
+	    // Enter search text
+	    WebElement searchBox = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.name("q")
+	            )
+	    );
 
-        // Wait for suggestions
-        List<WebElement> suggestions = wait.until(
-                ExpectedConditions.visibilityOfAllElementsLocatedBy(
-                        By.cssSelector("ul[role='listbox'] li")
-                )
-        );
+	    searchBox.sendKeys("selenium");
 
-        System.out.println("Total suggestions: " + suggestions.size());
+	    // Wait for suggestions
+	    List<WebElement> suggestions = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.cssSelector("ul[role='listbox'] li")
+	            )
+	    );
 
-        // Find and click Selenium WebDriver suggestion
-        for (WebElement suggestion : suggestions) {
+	    System.out.println("Total suggestions: " + suggestions.size());
 
-            String text = suggestion.getText();
+	    boolean seleniumSuggestionFound = false;
 
-            System.out.println(text);
+	    // Check suggestions
+	    for (WebElement suggestion : suggestions) {
 
-            if (text.toLowerCase().contains("selenium webdriver")) {
-                suggestion.click();
-                break;
-            }
-        }
+	        String text = suggestion.getText();
 
-        // Verify search box contains selenium
-        Assert.assertTrue(searchBox.getAttribute("value").contains("selenium"));
-    }
+	        System.out.println(text);
+
+	        if (text.toLowerCase().contains("selenium")) {
+	            seleniumSuggestionFound = true;
+	        }
+	    }
+
+	    // Verify suggestions were displayed
+	    Assert.assertTrue(
+	            suggestions.size() > 0,
+	            "No suggestions were displayed"
+	    );
+
+	    // Verify at least one suggestion contains selenium
+	    Assert.assertTrue(
+	            seleniumSuggestionFound,
+	            "No suggestion containing 'selenium' was found"
+	    );
+	}
 }
