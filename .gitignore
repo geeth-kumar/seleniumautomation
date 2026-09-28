@@ -1,8 +1,9 @@
 target/
+downloads/
 test-output/
-screenshots/
-*.log
 .classpath
 .project
 .settings/
-downloads/
+*.log
+*.tmp
+screenshots/

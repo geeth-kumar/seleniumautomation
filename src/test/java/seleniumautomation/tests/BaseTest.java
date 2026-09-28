@@ -1,5 +1,7 @@
 package seleniumautomation.tests;
-
+import seleniumautomation.utils.ExtentReportManager;
+import org.testng.annotations.AfterSuite;
+import seleniumautomation.utils.ExtentTestManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,6 +20,11 @@ import seleniumautomation.utils.ScreenshotUtils;
 public class BaseTest {
 
     protected WebDriver driver;
+    @BeforeMethod
+    public void startExtentReport(ITestResult result) {
+
+        ExtentTestManager.startTest(result.getMethod().getMethodName());
+    }
 
     @BeforeMethod
     public void setup() throws IOException {
@@ -76,5 +83,12 @@ public class BaseTest {
         if (driver != null) {
             driver.quit();
         }
+    }
+    @AfterSuite
+    public void flushReport() {
+
+        ExtentReportManager
+                .getReportInstance()
+                .flush();
     }
 }

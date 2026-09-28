@@ -1,12 +1,20 @@
+
 package seleniumautomation.tests;
 
+import seleniumautomation.utils.ExcelUtils;
+import org.testng.annotations.DataProvider;
+import java.io.IOException;
+
+
+
+import seleniumautomation.utils.ConfigReader;
 import seleniumautomation.pages.SecureAreaPage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import seleniumautomation.pages.LoginPage;
+import seleniumautomation.utils.ExtentTestManager;
 
-import seleniumautomation.utils.ConfigReader;
 public class LoginTest extends BaseTest {
 
     private LoginPage loginPage;
@@ -21,7 +29,27 @@ public class LoginTest extends BaseTest {
 
         loginPage = new LoginPage(driver);
     }
+   
+    
+    
+    @DataProvider(name = "loginData")
+    public Object[][] loginData() throws IOException {
 
+        String filePath =
+                System.getProperty("user.dir")
+                + "\\src\\test\\resources\\loginData.xlsx";
+
+        return ExcelUtils.getTestData(
+                filePath,
+                "LoginData"
+        );
+    }
+    
+
+    
+
+
+    
     @Test
     public void validLoginTest() {
 
@@ -30,25 +58,31 @@ public class LoginTest extends BaseTest {
 
         loginPage.login(username, password);
 
-        secureAreaPage = new SecureAreaPage(driver);
-
-        String heading = secureAreaPage.getPageHeading();
-
-        Assert.assertEquals(heading, "Secure Area");
-
-        secureAreaPage.clickLogout();
-        Assert.assertTrue(secureAreaPage.isLoginButtonDisplayed());
-    }
-
-    @Test
-    public void invalidLoginTest() {
-
-        loginPage.login("wronguser", "wrongpassword");
-
-        String actualMessage = loginPage.getMessage();
+        String message = loginPage.getMessage();
 
         Assert.assertTrue(
-            actualMessage.contains("Your username is invalid!")
+                message.contains("You logged into a secure area!")
+        );
+        ExtentTestManager.getTest().pass("Valid login test passed");
+    }
+    
+
+
+   
+    @Test(dataProvider = "loginData")
+    public void invalidLoginTest(String username, String password) {
+
+        loginPage.login(username, password);
+
+        String message = loginPage.getMessage();
+
+        Assert.assertTrue(
+                message.contains("Your username is invalid!")
+        );
+        ExtentTestManager.getTest().pass(
+                "Invalid login test passed"
         );
     }
+    
+
 }

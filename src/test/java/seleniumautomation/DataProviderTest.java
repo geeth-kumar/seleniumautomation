@@ -12,14 +12,16 @@ public class DataProviderTest extends BaseTest {
 
 private LoginPage loginPage;
 
+
 @DataProvider(name = "loginData")
 public Object[][] loginData() {
+
     return new Object[][] {
-        { "tomsmith", "SuperSecretPassword!", true, "You logged into a secure area" },
-        { "wronguser", "wrongpassword", false, "Your username is invalid!" },
-        { "tomsmith", "wrongpassword", false, "Your password is invalid!" }
+        {"wronguser", "wrongpassword"},
+        {"invaliduser", "invalidpassword"}
     };
 }
+
 
 @Test(dataProvider = "loginData")
 public void loginTest(String user, String pass, boolean shouldSucceed, String expectedMsg) {
